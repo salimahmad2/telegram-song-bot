@@ -5,6 +5,9 @@
   "scripts": {
     "start": "node bot.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "node-telegram-bot-api": "^0.63.0",
     "yt-dlp-exec": "^1.0.0"
