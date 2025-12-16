@@ -2,35 +2,34 @@ const TelegramBot = require('node-telegram-bot-api');
 const { exec } = require('child_process');
 const fs = require('fs');
 
-const TOKEN = process.env.BOT_TOKEN;
-
-if (!TOKEN) {
-  console.error("❌ BOT_TOKEN not set!");
-  process.exit(1);
-}
+// ❌ Directly added bot token (NOT recommended for public repos)
+const TOKEN = "7964379250:AAECKcNdQ_ucWb7BVPyeoA8Q6wMBUiLkkMU";
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
+// /start command
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
-  bot.sendMessage(chatId,
-    `👋 স্বাগতম!\n🎶 আমি Song Bot!\n\nUse this bot like this:\n/song <song name> → Get mp3 file`
+  bot.sendMessage(
+    chatId,
+    `👋 Welcome!\n\n🎵 I am a Song Bot.\n\nUse:\n/song <song name>\nExample:\n/song Shape of You`
   );
 });
 
+// /song command
 bot.onText(/\/song (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   const query = match[1];
 
-  bot.sendMessage(chatId, `🔎 Searching for "${query}"...`);
+  bot.sendMessage(chatId, `🔍 Searching for "${query}"...`);
 
   const fileName = `song_${Date.now()}.mp3`;
   const command = `yt-dlp -x --audio-format mp3 -o "${fileName}" "ytsearch1:${query}"`;
 
   exec(command, (error) => {
     if (error) {
+      console.error(error);
       bot.sendMessage(chatId, "❌ Failed to download song.");
-      console.log(error);
       return;
     }
 
@@ -40,4 +39,4 @@ bot.onText(/\/song (.+)/, (msg, match) => {
   });
 });
 
-console.log("🎶 Song Bot running...");
+console.log("🎶 Song Bot is running...");
